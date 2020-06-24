@@ -16,6 +16,8 @@ import numpy as np
 import math
 import pandas as pd
 from statsmodels.stats.weightstats import DescrStatsW
+import matplotlib.pyplot as plt
+
 
 
 print('Questão 1 \n')
@@ -53,6 +55,23 @@ desvioStr = '%.3f'%(desvioP)
 mediaPonderada = calcP.mean
 coeficientV = (desvioP/mediaPonderada)*100
 coeficientStr = '%.3f'%(coeficientV) + '%'
+
+#histograma
+
+NumeroMulheres = DF['Nº de Mulheres']
+pressaoS = DF['Ponto médio']
+
+histData = []
+for idx, p in enumerate(pressaoS.values):
+  m = NumeroMulheres.values[idx]
+  for n in range(m):
+    histData.append(p)
+
+plt.hist(histData, bins=6)
+plt.xlabel('Pressão Siatólica')
+plt.ylabel('Nº de Mulheres')
+plt.title('Pressão Siatólica mm de Hg por numero de mulheres')
+plt.show()
 
 """**Questão a) A percentagem de mulheres que têm pressão igual ou maior que 120mm de Hg.**"""
 
@@ -99,3 +118,18 @@ coeficientStr = '%.3f'%(coeficientV) + '%'
 print('\n o desvio padrão é de: ' + str(desvioStr) + ' e o coeficiente de variação é de: '  + str(coeficientStr))
 
 """**Questão f) Construa o respectivo histograma**"""
+
+NumeroMulheres = DF['Nº de Mulheres']
+pressaoS = DF['Ponto médio']
+
+histData = []
+for idx, p in enumerate(pressaoS.values):
+  m = NumeroMulheres.values[idx]
+  for n in range(m):
+    histData.append(p)
+
+plt.hist(histData, bins=6)
+plt.xlabel('Pressão Siatólica')
+plt.ylabel('Nº de Mulheres')
+plt.title('Pressão Siatólica mm de Hg por numero de mulheres')
+plt.show()
