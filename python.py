@@ -12,11 +12,13 @@ Original file is located at
 ###Curso: Ciência da Computação
 """
 
-import numpy
+import numpy as np
 import math
 import pandas as pd
+from statsmodels.stats.weightstats import DescrStatsW
 
-print('Questão 1 : \n')
+
+print('Questão 1 \n')
 
 # criação da tabela de frequencias
 DF = pd.DataFrame({ 'Ponto médio': [90, 110, 130, 150, 170, 190], 'Nº de Mulheres': [30, 80, 40, 10, 4, 6]}, 
@@ -40,7 +42,17 @@ qtdMulheres = sum(intervalos3)
 porcentagem2 =(sum(intervalos3)/total)*100
 porcentagemStr2 = '%.2f'%(porcentagem2) + "%"
 
-DF['Nº de Mulheres'].idxmax()
+#DF['Nº de Mulheres'].idxmax()
+
+pontoM = DF['Ponto médio'].values
+numMulheres = DF['Nº de Mulheres'].values
+calcP = DescrStatsW(pontoM, numMulheres)
+desvioP = calcP.std
+desvioStr = '%.3f'%(desvioP)
+
+mediaPonderada = calcP.mean
+coeficientV = (desvioP/mediaPonderada)*100
+coeficientStr = '%.3f'%(coeficientV) + '%'
 
 """**Questão a) A percentagem de mulheres que têm pressão igual ou maior que 120mm de Hg.**"""
 
@@ -69,3 +81,21 @@ print('\n O número de mulheres é de: ' + str(qtdMulheres) + ' e a percentagem 
 """**Questão d) Qual a pressão sistólica mais frequente?**"""
 
 DF['Nº de Mulheres'].idxmax()
+
+"""**Questão e) Qual o desvio padrão e o coeficiente de variação para a pressão sistólica**"""
+
+#desvio
+pontoM = DF['Ponto médio'].values
+numMulheres = DF['Nº de Mulheres'].values
+calcP = DescrStatsW(pontoM, numMulheres)
+desvioP = calcP.std
+desvioStr = '%.3f'%(desvioP)
+
+#coeficiente de variação
+mediaPonderada = calcP.mean
+coeficientV = (desvioP/mediaPonderada)*100
+coeficientStr = '%.3f'%(coeficientV) + '%'
+
+print('\n o desvio padrão é de: ' + str(desvioStr) + ' e o coeficiente de variação é de: '  + str(coeficientStr))
+
+"""**Questão f) Construa o respectivo histograma**"""
