@@ -19,12 +19,11 @@ from statsmodels.stats.weightstats import DescrStatsW
 import matplotlib.pyplot as plt
 
 
-
 print('Questão 1 \n')
 
 # criação da tabela de frequencias
-DF = pd.DataFrame({ 'Ponto médio': [90, 110, 130, 150, 170, 190], 'Nº de Mulheres': [30, 80, 40, 10, 4, 6]}, 
-index=['80 |--- 100','100 |--- 120','120 |--- 140','140 |--- 160','160 |--- 180','180 |--- 200'] )
+DF = pd.DataFrame(data={ 'Ponto médio': [90, 110, 130, 150, 170, 190], 'Nº de Mulheres': [30, 80, 40, 10, 4, 6]}, 
+index=['80 |--- 100','100 |--- 120','120 |--- 140','140 |--- 160','160 |--- 180','180 |--- 200'])
 
 DF.index.name = 'Pressão Siatólica'
 total = sum(DF['Nº de Mulheres'].values)
@@ -56,22 +55,108 @@ mediaPonderada = calcP.mean
 coeficientV = (desvioP/mediaPonderada)*100
 coeficientStr = '%.3f'%(coeficientV) + '%'
 
-#histograma
+#histograma questão 1
 
 NumeroMulheres = DF['Nº de Mulheres']
 pressaoS = DF['Ponto médio']
 
-histData = []
-for idx, p in enumerate(pressaoS.values):
-  m = NumeroMulheres.values[idx]
-  for n in range(m):
-    histData.append(p)
+# NumeroMulheres = DF['Nº de Mulheres']
+# pressaoS = DF['Ponto médio']
 
-plt.hist(histData, bins=6)
-plt.xlabel('Pressão Siatólica')
-plt.ylabel('Nº de Mulheres')
-plt.title('Pressão Siatólica mm de Hg por numero de mulheres')
-plt.show()
+# histData = []
+# for idx, p in enumerate(pressaoS.values):
+#   m = NumeroMulheres.values[idx]
+#   for n in range(m):
+#     histData.append(p)
+
+# plt.hist(histData, bins=6)
+# plt.xlabel('Pressão Siatólica')
+# plt.ylabel('Nº de Mulheres')
+# plt.title('Pressão Siatólica mm de Hg por numero de mulheres')
+# plt.show()
+
+print('\n Questão 2 \n')
+
+DF2 = sorted([9, 12, 10, 8, 11, 13, 10,15, 9, 7,
+       14, 12, 9, 7, 15, 6, 4, 16, 18, 9,
+       19, 10, 20, 13, 8, 7, 17, 15, 14, 20,
+       21, 19, 22, 6, 5, 12, 15, 23, 19, 24,
+       15, 10, 12, 9, 15, 24, 6, 24, 13, 12])
+
+frequencias = []
+
+amplitudeT = max(DF2)- min(DF2)
+h = amplitudeT/5
+h = math.ceil(h)
+
+menorValor = min(DF2)
+menorAplitude = menorValor + h
+valor = menorValor
+
+while (valor < max(DF2)):
+   frequencias.append('{} - {}'.format(round(valor,1),round(valor+h, 1)))
+   valor += h
+
+def contarFrequenciaEPontoMedio(classes, dados):
+  arrayAux = [];
+  pontosMedios = [];
+
+  for idx,intervalo in enumerate(classes):
+    [limitMin, limitMax] = intervalo.split(' - ')
+
+    pontosMedios.append(int((int(limitMin) + int(limitMax))/2))
+    somatorio = 0
+
+    for dado in dados:
+      if(idx < (len(classes)-1) and dado >= int(limitMin) and dado < int(limitMax)):
+        somatorio = 1 + somatorio
+      elif(idx == (len(classes)-1) and dado >= int(limitMin) and dado <= int(limitMax)):
+        somatorio = 1 + somatorio
+    
+    arrayAux.append(somatorio)
+
+  return [arrayAux,pontosMedios];
+
+[valoresFrequencias, pontosMedios] = contarFrequenciaEPontoMedio(frequencias, DF2)
+
+DF2 = pd.DataFrame(data={ 'Ponto médio': pontosMedios,'Frequencia': valoresFrequencias}, index=frequencias)
+
+# print(DF2)
+#histograma Questão 2
+
+# Freq = DF2['Frequencia']
+# mortalidade = DF2['Ponto médio']
+
+# data = []
+# for idx, c in enumerate(mortalidade.values):
+#   b = Freq.values[idx]
+#   for n in range(b):
+#     data.append(c)
+
+# plt.hist(data, bins=range(4,24,4))
+# plt.xlabel('Coeficiente de mortalidade')
+# plt.ylabel('Frequencia')
+# plt.title('Coeficiente de mortalidade geral por 1000 habitantes')
+# plt.show()
+
+PM = DF2['Ponto médio'].values
+freq = DF2['Frequencia'].values
+calcP = DescrStatsW(PM, freq)
+mediaP = calcP.mean
+mediapStr = '%.2f'%(mediaP)
+print('\n media: ' +  str(mediapStr))
+
+totalFrequencia = sum(DF2['Frequencia'].values)
+
+cm= len(DF2)/2
+mediano = (cm - pontosMedios[0])*h/(valoresFrequencias[1])+12
+medianoStr = '%.2f'%(mediano)
+print('\n mediano: ' + str(medianoStr))
+
+
+moda= (3*mediano - 2*mediano)
+modaStr = '%.3f'%(moda)
+print('\n moda:' + str(modaStr))
 
 """**Questão a) A percentagem de mulheres que têm pressão igual ou maior que 120mm de Hg.**"""
 
@@ -132,4 +217,64 @@ plt.hist(histData, bins=6)
 plt.xlabel('Pressão Siatólica')
 plt.ylabel('Nº de Mulheres')
 plt.title('Pressão Siatólica mm de Hg por numero de mulheres')
+plt.show()
+
+"""**Questão 2a)  Construa uma distribuição de frequência com 5 classes**"""
+
+DF2 = sorted([9, 12, 10, 8, 11, 13, 10,15, 9, 7,
+       14, 12, 9, 7, 15, 6, 4, 16, 18, 9,
+       19, 10, 20, 13, 8, 7, 17, 15, 14, 20,
+       21, 19, 22, 6, 5, 12, 15, 23, 19, 24,
+       15, 10, 12, 9, 15, 24, 6, 24, 13, 12])
+
+frequencias = []
+amplitudeT = max(DF2)- min(DF2)
+h = amplitudeT/5
+h = math.ceil(h)
+menorValor = min(DF2)
+menorAplitude = menorValor + h
+valor = menorValor
+
+while (valor < max(DF2)):
+   frequencias.append('{} - {}'.format(round(valor,1),round(valor+h, 1)))
+   valor += h
+
+def contarFrequenciaEPontoMedio(classes, dados):
+  arrayAux = [];
+  pontosMedios = [];
+
+  for idx,intervalo in enumerate(classes):
+    [limitMin, limitMax] = intervalo.split(' - ')
+    pontosMedios.append(int((int(limitMin) + int(limitMax))/2))
+    somatorio = 0
+    for dado in dados:
+      if(idx < (len(classes)-1) and dado >= int(limitMin) and dado < int(limitMax)):
+        somatorio = 1 + somatorio
+      elif(idx == (len(classes)-1) and dado >= int(limitMin) and dado <= int(limitMax)):
+        somatorio = 1 + somatorio
+    
+    arrayAux.append(somatorio)
+
+  return [arrayAux,pontosMedios];
+
+[valoresFrequencias, pontosMedios] = contarFrequenciaEPontoMedio(frequencias, DF2)
+DF2 = pd.DataFrame(data={ 'Ponto médio': pontosMedios,'Frequencia': valoresFrequencias}, index=frequencias)
+
+print(DF2)
+
+"""**Questão 2b) Desenhe o histograma e o polígono de frequências**"""
+
+Freq = DF2['Frequencia']
+mortalidade = DF2['Ponto médio']
+
+data = []
+for idx, c in enumerate(mortalidade.values):
+  b = Freq.values[idx]
+  for n in range(b):
+    data.append(c)
+
+plt.hist(data, bins=range(4,24,4))
+plt.xlabel('Coeficiente de mortalidade')
+plt.ylabel('Frequencia')
+plt.title('Coeficiente de mortalidade geral por 1000 habitantes')
 plt.show()
