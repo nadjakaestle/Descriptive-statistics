@@ -17,96 +17,96 @@ import math
 import pandas as pd
 from statsmodels.stats.weightstats import DescrStatsW
 import matplotlib.pyplot as plt
-
-
+ 
+ 
 print('Questão 1 \n')
-
+ 
 # criação da tabela de frequencias
 DF = pd.DataFrame(data={ 'Ponto médio': [90, 110, 130, 150, 170, 190], 'Nº de Mulheres': [30, 80, 40, 10, 4, 6]}, 
 index=['80 |--- 100','100 |--- 120','120 |--- 140','140 |--- 160','160 |--- 180','180 |--- 200'])
-
+ 
 DF.index.name = 'Pressão Siatólica'
 total = sum(DF['Nº de Mulheres'].values)
 print(DF)
 print('\nTotal nº de Mulheres:  ', total, '\n')
-
-
+ 
+ 
 intervalos = DF.loc[DF['Ponto médio'] >= 120, ['Nº de Mulheres']].values
 porcentagem =(sum(intervalos)/total)*100
 porcentagemStr = '%.2f'%(porcentagem) + "%"
-
+ 
 intervalos2 = DF.loc[DF['Ponto médio'] < 160, ['Nº de Mulheres']].values
 qtdMulheres = sum(intervalos2)
-
+ 
 intervalos3 = DF.loc[DF['Ponto médio'] >= 100, ['Nº de Mulheres']].values
 qtdMulheres = sum(intervalos3)
 porcentagem2 =(sum(intervalos3)/total)*100
 porcentagemStr2 = '%.2f'%(porcentagem2) + "%"
-
+ 
 #DF['Nº de Mulheres'].idxmax()
-
+ 
 pontoM = DF['Ponto médio'].values
 numMulheres = DF['Nº de Mulheres'].values
 calcP = DescrStatsW(pontoM, numMulheres)
 desvioP = calcP.std
 desvioStr = '%.3f'%(desvioP)
-
+ 
 mediaPonderada = calcP.mean
 coeficientV = (desvioP/mediaPonderada)*100
 coeficientStr = '%.3f'%(coeficientV) + '%'
-
+ 
 #histograma questão 1
-
+ 
 NumeroMulheres = DF['Nº de Mulheres']
 pressaoS = DF['Ponto médio']
-
+ 
 # NumeroMulheres = DF['Nº de Mulheres']
 # pressaoS = DF['Ponto médio']
-
+ 
 # histData = []
 # for idx, p in enumerate(pressaoS.values):
 #   m = NumeroMulheres.values[idx]
 #   for n in range(m):
 #     histData.append(p)
-
+ 
 # plt.hist(histData, bins=6)
 # plt.xlabel('Pressão Siatólica')
 # plt.ylabel('Nº de Mulheres')
 # plt.title('Pressão Siatólica mm de Hg por numero de mulheres')
 # plt.show()
-
+ 
 print('\n Questão 2 \n')
-
+ 
 DF2 = sorted([9, 12, 10, 8, 11, 13, 10,15, 9, 7,
        14, 12, 9, 7, 15, 6, 4, 16, 18, 9,
        19, 10, 20, 13, 8, 7, 17, 15, 14, 20,
        21, 19, 22, 6, 5, 12, 15, 23, 19, 24,
        15, 10, 12, 9, 15, 24, 6, 24, 13, 12])
-
+ 
 frequencias = []
-
+ 
 amplitudeT = max(DF2)- min(DF2)
 h = amplitudeT/5
 h = math.ceil(h)
-
+ 
 menorValor = min(DF2)
 menorAplitude = menorValor + h
 valor = menorValor
-
+ 
 while (valor < max(DF2)):
    frequencias.append('{} - {}'.format(round(valor,1),round(valor+h, 1)))
    valor += h
-
+ 
 def contarFrequenciaEPontoMedio(classes, dados):
   arrayAux = [];
   pontosMedios = [];
-
+ 
   for idx,intervalo in enumerate(classes):
     [limitMin, limitMax] = intervalo.split(' - ')
-
+ 
     pontosMedios.append(int((int(limitMin) + int(limitMax))/2))
     somatorio = 0
-
+ 
     for dado in dados:
       if(idx < (len(classes)-1) and dado >= int(limitMin) and dado < int(limitMax)):
         somatorio = 1 + somatorio
@@ -114,49 +114,56 @@ def contarFrequenciaEPontoMedio(classes, dados):
         somatorio = 1 + somatorio
     
     arrayAux.append(somatorio)
-
+ 
   return [arrayAux,pontosMedios];
-
+ 
 [valoresFrequencias, pontosMedios] = contarFrequenciaEPontoMedio(frequencias, DF2)
-
+ 
 DF2 = pd.DataFrame(data={ 'Ponto médio': pontosMedios,'Frequencia': valoresFrequencias}, index=frequencias)
+DF2.index.name = 'Coeficiente de mortalidade'
 
-# print(DF2)
+ 
+print(DF2)
 #histograma Questão 2
-
+ 
 # Freq = DF2['Frequencia']
 # mortalidade = DF2['Ponto médio']
-
+ 
 # data = []
 # for idx, c in enumerate(mortalidade.values):
 #   b = Freq.values[idx]
 #   for n in range(b):
 #     data.append(c)
-
+ 
 # plt.hist(data, bins=range(4,24,4))
 # plt.xlabel('Coeficiente de mortalidade')
 # plt.ylabel('Frequencia')
 # plt.title('Coeficiente de mortalidade geral por 1000 habitantes')
 # plt.show()
-
+ 
 PM = DF2['Ponto médio'].values
 freq = DF2['Frequencia'].values
 calcP = DescrStatsW(PM, freq)
 mediaP = calcP.mean
 mediapStr = '%.2f'%(mediaP)
-print('\n media: ' +  str(mediapStr))
 
 totalFrequencia = sum(DF2['Frequencia'].values)
+ 
+fAcumulada = []
+aux = 0
+for i in range(len(freq)):
+   aux += freq[i]
+   fAcumulada.append(aux)
 
-cm= len(DF2)/2
-mediano = (cm - pontosMedios[0])*h/(valoresFrequencias[1])+12
-medianoStr = '%.2f'%(mediano)
-print('\n mediano: ' + str(medianoStr))
+totalFrequecia =sum(valoresFrequencias)
+calculomed= sum(valoresFrequencias)/2
 
+idxClasseMediana = 2;
+mediano = (12 + ((calculomed - fAcumulada[idxClasseMediana -1])/valoresFrequencias[idxClasseMediana]) * h)
+medianoStr= '%.2f'%(mediano)
 
-moda= (3*mediano - 2*mediano)
-modaStr = '%.3f'%(moda)
-print('\n moda:' + str(modaStr))
+#moda calculada pela formula de pearson
+moda= (3*mediano - 2*mediaP)
 
 """**Questão a) A percentagem de mulheres que têm pressão igual ou maior que 120mm de Hg.**"""
 
@@ -193,12 +200,12 @@ pontoM = DF['Ponto médio'].values
 numMulheres = DF['Nº de Mulheres'].values
 calcP = DescrStatsW(pontoM, numMulheres)
 desvioP = calcP.std
-desvioStr = '%.3f'%(desvioP)
+desvioStr = '%.2f'%(desvioP)
 
 #coeficiente de variação
 mediaPonderada = calcP.mean
 coeficientV = (desvioP/mediaPonderada)*100
-coeficientStr = '%.3f'%(coeficientV) + '%'
+coeficientStr = '%.2f'%(coeficientV) + '%'
 
 print('\n o desvio padrão é de: ' + str(desvioStr) + ' e o coeficiente de variação é de: '  + str(coeficientStr))
 
@@ -259,7 +266,7 @@ def contarFrequenciaEPontoMedio(classes, dados):
 
 [valoresFrequencias, pontosMedios] = contarFrequenciaEPontoMedio(frequencias, DF2)
 DF2 = pd.DataFrame(data={ 'Ponto médio': pontosMedios,'Frequencia': valoresFrequencias}, index=frequencias)
-
+DF2.index.name = 'Coeficiente de mortalidade'
 print(DF2)
 
 """**Questão 2b) Desenhe o histograma e o polígono de frequências**"""
@@ -278,3 +285,27 @@ plt.xlabel('Coeficiente de mortalidade')
 plt.ylabel('Frequencia')
 plt.title('Coeficiente de mortalidade geral por 1000 habitantes')
 plt.show()
+
+PM = DF2['Ponto médio'].values
+freq = DF2['Frequencia'].values
+calcP = DescrStatsW(PM, freq)
+mediaP = calcP.mean
+mediapStr = '%.2f'%(mediaP)
+
+totalFrequencia = sum(DF2['Frequencia'].values)
+ 
+fAcumulada = []
+aux = 0
+for i in range(len(freq)):
+   aux += freq[i]
+   fAcumulada.append(aux)
+
+totalFrequecia =sum(valoresFrequencias)
+calculomed= sum(valoresFrequencias)/2
+
+idxClasseMediana = 2;
+mediano = (12 + ((calculomed - fAcumulada[idxClasseMediana -1])/valoresFrequencias[idxClasseMediana]) * h)
+medianoStr= '%.2f'%(mediano)
+
+moda= (3*mediano - 2*mediaP)
+print('\n media: ', str(mediapStr), '\n mediano: ' + str(medianoStr), '\n modal, calculada pelo método de pearson:' ,str(moda))
