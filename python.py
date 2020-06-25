@@ -19,6 +19,7 @@ from statsmodels.stats.weightstats import DescrStatsW
 import matplotlib.pyplot as plt
  
  
+
 print('Questão 1 \n')
  
 # criação da tabela de frequencias
@@ -75,7 +76,7 @@ pressaoS = DF['Ponto médio']
 # plt.title('Pressão Siatólica mm de Hg por numero de mulheres')
 # plt.show()
  
-print('\n Questão 2 \n')
+# print('\n Questão 2 \n')
  
 DF2 = sorted([9, 12, 10, 8, 11, 13, 10,15, 9, 7,
        14, 12, 9, 7, 15, 6, 4, 16, 18, 9,
@@ -121,10 +122,9 @@ def contarFrequenciaEPontoMedio(classes, dados):
  
 DF2 = pd.DataFrame(data={ 'Ponto médio': pontosMedios,'Frequencia': valoresFrequencias}, index=frequencias)
 DF2.index.name = 'Coeficiente de mortalidade'
-
  
-print(DF2)
-#histograma Questão 2
+#print(DF2)
+# histograma Questão 2
  
 # Freq = DF2['Frequencia']
 # mortalidade = DF2['Ponto médio']
@@ -134,8 +134,9 @@ print(DF2)
 #   b = Freq.values[idx]
 #   for n in range(b):
 #     data.append(c)
- 
-# plt.hist(data, bins=range(4,24,4))
+
+# plt.plot(pontosMedios, valoresFrequencias)
+# plt.hist(data, bins=range(4,28,4))
 # plt.xlabel('Coeficiente de mortalidade')
 # plt.ylabel('Frequencia')
 # plt.title('Coeficiente de mortalidade geral por 1000 habitantes')
@@ -273,18 +274,21 @@ print(DF2)
 
 Freq = DF2['Frequencia']
 mortalidade = DF2['Ponto médio']
-
+ 
 data = []
 for idx, c in enumerate(mortalidade.values):
   b = Freq.values[idx]
   for n in range(b):
     data.append(c)
 
-plt.hist(data, bins=range(4,24,4))
+plt.plot(pontosMedios, valoresFrequencias)
+plt.hist(data, bins=range(4,28,4))
 plt.xlabel('Coeficiente de mortalidade')
 plt.ylabel('Frequencia')
 plt.title('Coeficiente de mortalidade geral por 1000 habitantes')
 plt.show()
+
+"""**Questão c) Usando o item "a", calcule os coeficientes de mortalidade médio, mediano e modal dos municípios**"""
 
 PM = DF2['Ponto médio'].values
 freq = DF2['Frequencia'].values
